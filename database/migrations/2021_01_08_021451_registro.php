@@ -13,7 +13,7 @@ class Registro extends Migration
      */
     public function up()
     {
-        Schema::create('registro', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('email')->unique();
             $table->string('password');
@@ -21,6 +21,7 @@ class Registro extends Migration
             $table->string('fullname');
             $table->date('birthdate');
             $table->string('image');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
