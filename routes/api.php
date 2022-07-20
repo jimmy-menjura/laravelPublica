@@ -38,7 +38,12 @@ Route::post('crearPublicacion',[PublicacionesController::class,'add']);
 Route::get('obtenerPublicacion/{id}',[PublicacionesController::class,'get']);
 Route::post('editar/{id}',[PublicacionesController::class,'editar']);
 Route::delete('eliminar/{id}',[PublicacionesController::class,'eliminar']);
+Route::get('obtenerPerfil/{id}',[Controlador::class,'get']);
 Route::post('mensaje', [ChatController::class,'message'])->name('api.mensaje.message')->middleware('auth:api');
+Route::post('mensajePrivado', [ChatController::class,'messagePriv'])->name('api.mensaje.messagePriv')->middleware('auth:api');
+Route::post('agregarAmigo', [Controlador::class,'createFriend']);
+Route::get('obtenerStatusFriend',[Controlador::class,'getAllFriends']);
+Route::post('editarEstadoAmigo/{id}', [Controlador::class,'editFriend']);
 //Route::get('usuarios', [Controlador::class,'obtenerUsuario']);
 
 //chat 

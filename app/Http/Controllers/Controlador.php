@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\friends;
 use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,7 @@ class Controlador extends Controller
     protected $user;
     public function __construct(){
     $this->user = new User;
-    $this->middleware('auth:api', ['except' => ['login']]);
+    // $this->middleware('auth:api', ['except' => ['login']]);
     $this->guard = "api";
      }
     public function register(Request $request)
@@ -58,6 +59,30 @@ class Controlador extends Controller
             {
                 $users = User::where('id', '!=', auth()->user()->id)->get();
                 return $users;
+            }
+            public function get($id){
+                $users = User::find($id);
+                return $users;
+            }
+            /*
+            * Metodos para agregar y obtener  los amigos que se desean agregar
+            */
+              public function createFriend(Request $request)
+            {
+            	$registro = friends::create($request->all());
+            	return $registro;
+            }
+
+            public function editFriend($id, Request $request){
+                $registro = $this->get($id);
+                $registro->fill($request->all())->save();
+                return $registro;
+            }
+
+            public function getAllFriends()
+            {
+            $friends = friends::all();
+                return $friends;
             }
             // public function getAll()
             // {

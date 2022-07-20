@@ -51,7 +51,7 @@ class PublicacionesController extends Controller
         ],200);
     }
     public function get($id){
-        $publicacion = publicaciones::find($id);
+        $publicacion = User::with('publicaciones')->find($id);
         return $publicacion;
     }
     public function editar($id, Request $request){
