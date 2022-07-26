@@ -81,8 +81,15 @@ class Controlador extends Controller
 
             public function getAllFriends()
             {
-            $friends = friends::all();
-                return $friends;
+                // $users = User::where('id', '!=', auth()->user()->id)->get();
+                $bp = User::where('friends')->get();
+                $users = friends::all();
+                return response()->json([
+                    "success"=>true,
+                    "message"=>"Registro con éxito",
+                    "user"=>$bp,
+                        
+                ],200);
             }
             // public function getAll()
             // {
