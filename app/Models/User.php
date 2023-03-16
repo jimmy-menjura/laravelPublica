@@ -17,7 +17,7 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = array('email', 'password', 'nickName', 'fullName', 'birthdate', 'image');
     
     public function publicaciones(){
-        return $this->hasMany(publicaciones::class);
+        return $this->hasMany(publicaciones::class,'users_id');
     }
     public function friends(){
         return $this->hasMany(friends::class);

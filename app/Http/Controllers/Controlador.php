@@ -25,9 +25,9 @@ class Controlador extends Controller
         try{
         $validator = Validator::make($request->all(), [
             'email' => 'string|email|max:255|unique:users',
-            'password' => 'string|min:6|max:30',
-            'nickName' => 'string|max:255',
-            'fullName' => 'string|max:255',
+            'password' => 'string|min:3|max:8',
+            'nickName' => 'string|max:20',
+            'fullName' => 'string|max:20',
             'birthdate' => 'date|max:255|',
             'image' => 'File',
             ]);

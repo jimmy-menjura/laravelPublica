@@ -34,9 +34,6 @@ Route::group([
     'middleware' => ['cors']
   //   'namespace' => ['App\Http\Controllers\Controlador']
 ], function ($router) {
-Route::get('publicacion',[PublicacionesController::class,'getAll']);
-Route::post('crearPublicacion',[PublicacionesController::class,'add']);
-Route::get('obtenerPublicacion/{id}',[PublicacionesController::class,'get']);
 Route::post('editar/{id}',[PublicacionesController::class,'editar']);
 Route::delete('eliminar/{id}',[PublicacionesController::class,'eliminar']);
 Route::get('obtenerPerfil/{id}',[Controlador::class,'get']);
@@ -57,6 +54,9 @@ Route::group([
       'middleware' => ['jwt.verify','cors'],
     //   'namespace' => ['App\Http\Controllers\Controlador']
 ], function ($router) {
+    Route::get('publicacion',[PublicacionesController::class,'getAll']);
+    Route::post('crearPublicacion',[PublicacionesController::class,'add']);
+    Route::get('obtenerPublicacion/{id}',[PublicacionesController::class,'get']);
     Route::get('private-chat/{chatroom}',[MensajeController::class,'index']);
     Route::post('private-chat/{chatroom}', [MensajeController::class,'store']);
     Route::get('fetch-private-chat/{chatroom}/',  [MensajeController::class,'get']);

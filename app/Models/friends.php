@@ -9,6 +9,10 @@ class friends extends Model
 {
     protected $fillable = array('user_friend','status','user_id');
     
+
+    public function publicaciones(){
+        return $this->hasMany(publicaciones::class,'users_id','user_id');
+    }
     public function Users()
     {
         return $this->belongsTo(User::class);
