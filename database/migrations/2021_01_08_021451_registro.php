@@ -20,7 +20,7 @@ class Registro extends Migration
             $table->string('nickname');
             $table->string('fullname');
             $table->date('birthdate');
-            $table->string('image');
+            $table->string('image')->nullable();;
             $table->rememberToken();
             $table->timestamps();
         });

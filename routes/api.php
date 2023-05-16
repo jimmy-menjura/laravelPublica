@@ -74,4 +74,5 @@ Route::group([
     Route::post('actualizarImagen/{id}',[Controlador::class,'guardarImagenPerfil']);
     Route::post('verificatedPassword',[Controlador::class,'verificatedPassword']);
     Route::post('updatePass',[Controlador::class,'updatePass']);
+    Route::get('obtenerMensajePrivado/{id}', [ChatController::class,'getMessagePriv']);
 });

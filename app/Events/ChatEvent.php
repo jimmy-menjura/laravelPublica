@@ -29,9 +29,7 @@ class ChatEvent implements ShouldBroadcast
     {
         $this->response = [
             'message'   => $data['message'],
-            'image'     => $data['image'],
             'to'        => $data['to'],
-            'nickname'  => auth()->user()->nickname,
             'idOriginador' =>  auth()->user()->id      
         ];
     }

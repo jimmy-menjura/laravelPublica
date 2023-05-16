@@ -124,9 +124,10 @@ class Amigos extends Controller
                     // ->where('users.id','=', auth()->user()->id)
                     // ->get();
                 // }  
-                if(empty($allusersAndbyUser)){
-                    $allusersAndbyUser = User::where('id', '!=', auth()->user()->id)->get();
-                }   
+                // if(empty($allusersAndbyUser)){
+                //     $allusersAndbyUser = User::where('id', '!=', auth()->user()->id)->get();
+                    // print_r($allusersAndbyUser);
+                // }   
                 return response()->json([
                     "success"=>true,
                     "message"=>"Registro con éxito",

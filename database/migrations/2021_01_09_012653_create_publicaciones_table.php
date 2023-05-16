@@ -17,6 +17,7 @@ class CreatePublicacionesTable extends Migration
             $table->increments('id');
             $table->string('description');
             $table->string('image');
+            $table->foreignId('users_id');
             $table->timestamps();
         });
     }

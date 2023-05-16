@@ -15,9 +15,11 @@ class CreateMensajesTable extends Migration
     {
         Schema::create('mensajes', function (Blueprint $table) {
             $table->id();
-            $table->text('content');
-            $table->foreignId('user_id');
-            $table->foreignId('chat_id');
+            $table->integer('user_auth');
+            $table->string('message');
+            $table->string('image');
+            $table->string('nickName');
+            $table->integer('to');
             $table->timestamps();
         });
     }
