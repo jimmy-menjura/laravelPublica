@@ -20,8 +20,9 @@ class AuthController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(JWTAuth $jwtAuth)
     {
+        $this->jwtAuth = $jwtAuth;
         $this->middleware('auth:api', ['except' => ['login','register']]);
         $this->guard = "api";
     }
