@@ -129,7 +129,6 @@ class Controlador extends Controller
                     if($request->hasFile('image')){
                         $probar = $request->file('image')->getClientOriginalName();
                         $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/". $id->id,$probar);
-                        print_r(public_path($id->image));
                         if($id->image != null && $id->image != ''){
                             unlink(public_path($id->image));
                         }
