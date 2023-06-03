@@ -17,8 +17,6 @@ class CreateMensajesTable extends Migration
             $table->id();
             $table->integer('user_auth');
             $table->string('message');
-            $table->string('image');
-            $table->string('nickName');
             $table->integer('to');
             $table->timestamps();
         });
