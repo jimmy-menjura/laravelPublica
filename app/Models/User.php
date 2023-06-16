@@ -10,7 +10,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\publicaciones;
 use App\Models\friends;
 use App\Models\Likes;
-use App\Models\Comments;
+use App\Models\comments;
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
@@ -28,7 +28,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Likes::class);
     }
     public function Comments(){
-        return $this->hasMany(Comments::class);
+        return $this->hasMany(comments::class);
     }
     public function chats(){
         return $this->belongsToMany('App\Models\chat');

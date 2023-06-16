@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\User;
 use App\Models\Friends;
 use App\Models\Likes;
-use App\Models\Comments;
+use App\Models\comments;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class publicaciones extends Model
@@ -31,7 +31,7 @@ class publicaciones extends Model
     }
     public function Comments()
     {
-        return $this->belongsTo(Comments::class);
+        return $this->belongsTo(comments::class);
     }
     
 }

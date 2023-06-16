@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Comments;
+use App\Models\comments;
 use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
@@ -24,13 +24,13 @@ class CommentController extends Controller
     }
 
     public function deleteComment($id){ 
-        $like = Comments::find($id);
+        $like = comments::find($id);
         $like->delete();
         return $like;
     }
 
     public function saveComment(Request $comment){ 
-        $registro = Comments::create($comment->all());
+        $registro = comments::create($comment->all());
         return response()->json([
             "success"=>true,
             "message"=>"like guardado con éxito",
