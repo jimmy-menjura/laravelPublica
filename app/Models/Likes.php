@@ -7,16 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\publicaciones;
 
-class friends extends Model
+class Likes extends Model
 {
-    protected $fillable = array('user_friend','status','user_id');
-    
+    protected $fillable = array('like','publicacion_id','user_id');
 
+    
     public function publicaciones(){
-        return $this->hasMany(publicaciones::class,'users_id','user_id');
+        return $this->hasMany(publicaciones::class);
     }
     public function Users()
     {
         return $this->belongsTo(User::class);
     }
+    
 }

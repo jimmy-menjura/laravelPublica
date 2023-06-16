@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\publicaciones;
 use App\Models\friends;
+use App\Models\Likes;
+use App\Models\Comments;
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
@@ -21,6 +23,12 @@ class User extends Authenticatable implements JWTSubject
     }
     public function friends(){
         return $this->hasMany(friends::class);
+    }
+    public function Likes(){
+        return $this->hasMany(Likes::class);
+    }
+    public function Comments(){
+        return $this->hasMany(Comments::class);
     }
     public function chats(){
         return $this->belongsToMany('App\Models\chat');

@@ -4,9 +4,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controlador;
 use App\Http\Controllers\PublicacionesController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Amigos;
+use App\Http\Controllers\CommentController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,12 +37,11 @@ Route::group([
     'middleware' => ['cors']
   //   'namespace' => ['App\Http\Controllers\Controlador']
 ], function ($router) {
-Route::post('editar/{id}',[PublicacionesController::class,'editar']);
+
 Route::delete('eliminar/{id}',[PublicacionesController::class,'eliminar']);
 Route::get('obtenerPerfil/{id}',[Controlador::class,'get']);
 Route::post('mensaje', [ChatController::class,'message'])->name('api.mensaje.message')->middleware('auth:api');
 Route::post('mensajePrivado', [ChatController::class,'messagePriv'])->name('api.mensaje.messagePriv')->middleware('auth:api');
-
 Route::post('login', [AuthController::class,'login']);
 Route::post('registro', [Controlador::class,'register']);
 // Route::post('editarEstadoAmigo/{id}', [Controlador::class,'editFriend']);
@@ -57,6 +59,8 @@ Route::group([
     Route::get('publicacion',[PublicacionesController::class,'getAll']);
     Route::post('crearPublicacion',[PublicacionesController::class,'add']);
     Route::get('obtenerPublicacion/{id}',[PublicacionesController::class,'get']);
+    Route::post('actualizaPublicacion/{id}',[PublicacionesController::class,'editar']);
+    Route::get('obtenerPublicacionPorUsuarioAuth/{id}',[PublicacionesController::class,'getPublicationByUser']);
     Route::get('private-chat/{chatroom}',[MensajeController::class,'index']);
     Route::post('private-chat/{chatroom}', [MensajeController::class,'store']);
     Route::get('fetch-private-chat/{chatroom}/',  [MensajeController::class,'get']);
@@ -71,8 +75,18 @@ Route::group([
     Route::get('amigoAgregado', [Amigos::class,'obtenerAmigosAgregados']);
     // Route::put('actualizaPerfil/{id}', [Controlador::class,'editarPerfil']);
     Route::put('actualizaPerfil/{id}',[Controlador::class,'editarPerfil']);
-    Route::post('actualizarImagen/{id}',[Controlador::class,'guardarImagenPerfil']);
+    Route::post('actualizarImagen/{id}',[Controlador::class,'guardarImagenPerfil']); 
     Route::post('verificatedPassword',[Controlador::class,'verificatedPassword']);
     Route::post('updatePass',[Controlador::class,'updatePass']);
+    Route::delete('eliminarPublicacion/{id}',[PublicacionesController::class,'eliminar']);
     Route::get('obtenerMensajePrivado/{id}', [ChatController::class,'getMessagePriv']);
+    Route::post('saveLike',[LikeController::class,'saveLike']);
+    Route::delete('eliminarLike/{id}',[LikeController::class,'deleteLike']);
+    Route::get('getLike/{id}',[LikeController::class,'get']);
+    Route::get('getLikeByUserAndPublication/{id}',[LikeController::class,'getLikeByUserAndPublication']);
+    Route::post('saveComment',[CommentController::class,'saveComment']);
+    Route::delete('deleteComment/{id}',[CommentController::class,'deleteComment']);
+    Route::get('getComment/{id}',[CommentController::class,'get']);
+    Route::get('getCommentByUserAndPublication/{id}',[CommentController::class,'getCommentByUserAndPublication']);
+    
 });

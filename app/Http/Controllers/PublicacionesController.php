@@ -58,10 +58,15 @@ class PublicacionesController extends Controller
         $userRecep = DB::table('users')
             ->join('friends','users.id','=','friends.user_id')
             ->join('publicaciones','users.id','=','publicaciones.users_id')
+            ->leftJoin('likes',function ($query){
+                $query->on('likes.publicacion_id','=','publicaciones.id');
+                $query->on('likes.user_id','=',DB::raw(auth()->user()->id));
+            })
             ->where('friends.user_friend','=',auth()->user()->id)
             ->where('status','=',2)
             ->orderBy('publicaciones.created_at', 'desc')
-            ->get(['publicaciones.id','users.nickname','users.fullname',
+            ->get(['publicaciones.id',DB::raw('(select count(likes.like) from likes 
+            where likes.publicacion_id = publicaciones.id ) as contadorLikes'),'likes.like','likes.id as likeId','publicaciones.users_id as user_id', DB::raw("false as myPublic"), 'users.nickname','users.fullname',
             'users.image as ImagenUser','publicaciones.image as imagenPublica',
             'publicaciones.created_at','publicaciones.updated_at','publicaciones.description']);
 
@@ -105,11 +110,16 @@ class PublicacionesController extends Controller
             $UserSend = DB::table('users')
             ->join('friends','users.id','=','friends.user_friend')
             ->join('publicaciones','users.id','=','publicaciones.users_id')
+            ->leftJoin('likes',function ($query){
+                $query->on('likes.publicacion_id','=','publicaciones.id');
+                $query->on('likes.user_id','=',DB::raw(auth()->user()->id));
+            })
             ->where('friends.user_id','=',auth()->user()->id)
             ->where('status','=',2)
             ->orderBy('publicaciones.created_at', 'desc')
             // ->get();
-            ->get(['publicaciones.id','users.nickname','users.fullname'
+            ->get(['publicaciones.id',DB::raw('(select count(likes.like) from likes 
+            where likes.publicacion_id = publicaciones.id ) as contadorLikes'),'likes.like','likes.id as likeId','publicaciones.users_id as user_id', DB::raw("false as myPublic"),'users.nickname','users.fullname'
             ,'users.image as ImagenUser','publicaciones.image as imagenPublica',
             'publicaciones.created_at','publicaciones.updated_at','publicaciones.description']);
 
@@ -144,10 +154,15 @@ class PublicacionesController extends Controller
             
             $myPublic = DB::table('users')
             ->join('publicaciones','publicaciones.users_id','=','users.id')
+            ->leftJoin('likes',function ($query){
+            $query->on('likes.publicacion_id','=','publicaciones.id');
+            $query->on('likes.user_id','=',DB::raw(auth()->user()->id));
+            })
             ->where('publicaciones.users_id','=',auth()->user()->id)
             ->orderBy('publicaciones.created_at', 'desc')
             // ->get();
-            ->get(['publicaciones.id','users.nickname','users.fullname',
+            ->get(['publicaciones.id','likes.like',DB::raw('(select count(likes.like) from likes 
+            where likes.publicacion_id = publicaciones.id ) as contadorLikes'),'likes.id as likeId', 'publicaciones.users_id as user_id', DB::raw("true as myPublic"),'users.nickname','users.fullname',
             'users.image as ImagenUser','publicaciones.image as imagenPublica',
             'publicaciones.created_at','publicaciones.updated_at','publicaciones.description']);
 
@@ -233,18 +248,62 @@ class PublicacionesController extends Controller
     }
     public function get($id){
         $publicacion = User::with(['publicaciones' => function($q) {
-                $q->orderBy('publicaciones.created_at', 'desc');
-            }])->find($id);
+                $q->leftJoin('likes',function ($query){
+                $query->on('likes.publicacion_id','=','publicaciones.id');
+                $query->on('likes.user_id','=',DB::raw(auth()->user()->id));
+            });
+            $q->orderBy('publicaciones.created_at', 'desc')
+            ->select('publicaciones.users_id','publicaciones.id',
+            DB::raw('(select count(likes.like) from likes 
+            where likes.publicacion_id = publicaciones.id ) as contadorLikes'),'likes.like',
+            'likes.id as likeId',
+            DB::raw("false as myPublic"),
+            'publicaciones.image as imagenPublica',
+            'publicaciones.created_at','publicaciones.updated_at','publicaciones.description'
+            );
+            }])
+            ->where('users.id','=',$id)
+            ->get();
+        return $publicacion;
+    }
+    public function getPublicationByUser($id){
+        $publicacion = publicaciones::where('users_id',auth()->user()->id)
+        ->where('id','=',$id)->get();
         return $publicacion;
     }
     public function editar($id, Request $request){
-        $publicacion = $this->get($id);
-        $publicacion->fill($request->all())->save();
-        return $publicacion;
+        $publicacion = publicaciones::find($request->id);
+        $publicacion->description = $request->description;
+        $actualizado = $publicacion->save();
+
+        // $publicacion = $this->get($id);
+        // $publicacion->fill($request->all())->save();
+        if ( $actualizado )
+        {
+            return response()->json([
+            "resp" => true,
+            "Mensaje" => 'Actualizado exitosamente'
+            ],200);
+        }
+        else{
+            return 'no actualizado';
+        }
     }
-    public function eliminar($id){
-        $publicacion = $this->get($id);
-        $publicacion->delete();
-        return $publicacion;
+    public function eliminar($id){ 
+        // $url = str_replace('storage','public',) 
+        // $delete = publicaciones::where('users_id',auth()->user()->id)
+        // ->where('id','=',$id)->get();
+        $delete = $this->getPublicatinByUser($id);
+        // $delete['image']);   
+        $url = str_replace('storage','public',$delete[0]['image']) ;
+        publicaciones::where('users_id',auth()->user()->id)
+        ->where('id','=',$id)->delete();
+        Storage::delete($url);
+        
+        return response()->json([
+            "success"=>true,
+            "message"=>"Eliminado exitosamente"
+        ],200);
     }
+    
 }

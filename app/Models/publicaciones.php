@@ -8,6 +8,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use App\Models\User;
 use App\Models\Friends;
+use App\Models\Likes;
+use App\Models\Comments;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class publicaciones extends Model
@@ -23,4 +25,13 @@ class publicaciones extends Model
     {
         return $this->belongsTo(Friends::class,'users_id','user_id');
     }
+    public function Likes()
+    {
+        return $this->belongsTo(Likes::class);
+    }
+    public function Comments()
+    {
+        return $this->belongsTo(Comments::class);
+    }
+    
 }
