@@ -293,7 +293,7 @@ class PublicacionesController extends Controller
         // $url = str_replace('storage','public',) 
         // $delete = publicaciones::where('users_id',auth()->user()->id)
         // ->where('id','=',$id)->get();
-        $delete = $this->getPublicatinByUser($id);
+        $delete = $this->getPublicationByUser($id);
         // $delete['image']);   
         $url = str_replace('storage','public',$delete[0]['image']) ;
         publicaciones::where('users_id',auth()->user()->id)
