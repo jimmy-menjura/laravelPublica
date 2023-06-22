@@ -19,15 +19,13 @@ class ChatController extends Controller
         ]);
     }
     public function messagePriv(Request $request) {
-        $data = $request->only(['message','image', 'to']);
-        event(new ChatEvent($data));
-
+        $data = $request->only(['image','message', 'to']);
         mensajes::create([
             'user_auth' => auth()->user()->id,
             'message' => $request->get('message') ,
             'to' => $request->get('to')
         ]);
-
+        event(new ChatEvent($data));
         return response()->json([
             'ok'    => true,
             'message'   => 'Mensaje enviado correctamente',
