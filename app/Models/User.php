@@ -16,7 +16,7 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable;
 
     protected $table = 'users';
-    protected $fillable = array('email', 'password', 'nickName', 'fullName', 'birthdate', 'image');
+    protected $fillable = array('email', 'password', 'nickName', 'fullName', 'birthdate', 'image','watchpublications');
     
     public function publicaciones(){
         return $this->hasMany(publicaciones::class,'users_id');

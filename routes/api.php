@@ -88,5 +88,9 @@ Route::group([
     Route::delete('deleteComment/{id}',[CommentController::class,'deleteComment']);
     Route::get('getComment/{id}',[CommentController::class,'get']);
     Route::get('getCommentByUserAndPublication/{id}',[CommentController::class,'getCommentByUserAndPublication']);
+    Route::put('actualizarPrivacidadPublicaciones/{id}', [Controlador::class,'updatePrivacityPublications']);
+    Route::get('obtenerPrivacidadPublicación',[Controlador::class,'getPrivacityPublication']);
+    Route::get('contadorMisPublicaciones',[PublicacionesController::class,'getCountMyPublications']);
+    
     
 });

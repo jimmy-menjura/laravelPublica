@@ -162,6 +162,31 @@ class Controlador extends Controller
                 "Mensaje" => 'Actualizado exitosamente'
             ],200);
         }
+
+
+        public function updatePrivacityPublications($id, Request $request){
+            $user = User::find($request->id);
+            $user->watchpublications = $request->watchpublications;
+            $actualizado = $user->save();
+    
+            // $publicacion = $this->get($id);
+            // $publicacion->fill($request->all())->save();
+            if ( $actualizado )
+            {
+                return response()->json([
+                "resp" => true,
+                "Mensaje" => 'Actualizado exitosamente'
+                ],200);
+            }
+            else{
+                return 'no actualizado';
+            }
+        }
+        public function getPrivacityPublication(){
+            $watchpublications =User::find(auth()->user()->id)->watchpublications;
+            return $watchpublications;
+        }
+
             // public function getAll()
             // {
             // $registro = registro::all();
