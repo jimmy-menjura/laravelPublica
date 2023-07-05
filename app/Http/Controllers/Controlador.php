@@ -40,7 +40,8 @@ class Controlador extends Controller
                 'password' => Hash::make($request->get('password')),
                 'nickName' => $request->get('nickName'),
                 'fullName' => $request->get('fullName'),
-                'birthdate' => preg_replace("/T.*/","", $request->get('birthdate'))
+                'birthdate' => preg_replace("/T.*/","", $request->get('birthdate')),
+                'watchpublications' => 1
                 ]);
             if($request->hasFile('image')){
                 $probar = $request->file('image')->getClientOriginalName();
