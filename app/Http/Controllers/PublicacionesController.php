@@ -63,7 +63,7 @@ class PublicacionesController extends Controller
                 $query->on('likes.user_id','=',DB::raw(auth()->user()->id));
             })
             // ->where('users.watchpublications','=',0)
-            ->orWhere('friends.user_friend','=',auth()->user()->id)
+            ->where('friends.user_friend','=',auth()->user()->id)
             ->where('status','=',2)
             ->orderBy('publicaciones.created_at', 'desc')
             ->get(['publicaciones.id',DB::raw('(select count(likes.like) from likes 
