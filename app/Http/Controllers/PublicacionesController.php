@@ -63,6 +63,7 @@ class PublicacionesController extends Controller
                 $query->on('likes.user_id','=',DB::raw(auth()->user()->id));
             })
             // ->where('users.watchpublications','=',0)
+            ->where('users.watchpublications','=',0)
             ->where('friends.user_friend','=',auth()->user()->id)
             ->where('status','=',2)
             ->orderBy('publicaciones.created_at', 'desc')
@@ -70,7 +71,6 @@ class PublicacionesController extends Controller
             where likes.publicacion_id = publicaciones.id ) as contadorLikes'),'likes.like','likes.id as likeId','publicaciones.users_id as user_id', DB::raw("false as myPublic"), 'users.nickname','users.fullname',
             'users.image as ImagenUser','publicaciones.image as imagenPublica',
             'publicaciones.created_at','publicaciones.updated_at','publicaciones.description']);
-
 
             
         $userRecepPublic = DB::table('users')
@@ -82,13 +82,13 @@ class PublicacionesController extends Controller
         })
         ->where('users.watchpublications','=',1)
         ->where('friends.user_friend','<>',auth()->user()->id)
+        ->where('publicaciones.users_id','<>',auth()->user()->id) 
         ->where('status','<>',2)
         ->orderBy('publicaciones.created_at', 'desc')
         ->get(['publicaciones.id',DB::raw('(select count(likes.like) from likes 
         where likes.publicacion_id = publicaciones.id ) as contadorLikes'),'likes.like','likes.id as likeId','publicaciones.users_id as user_id', DB::raw("false as myPublic"), 'users.nickname','users.fullname',
         'users.image as ImagenUser','publicaciones.image as imagenPublica',
         'publicaciones.created_at','publicaciones.updated_at','publicaciones.description']);
-
         // $userRecep = User::with([
         //     'publicaciones' => function(MorphTo $morphTo){
         //         $morphTo->constrain([
@@ -142,7 +142,6 @@ class PublicacionesController extends Controller
             where likes.publicacion_id = publicaciones.id ) as contadorLikes'),'likes.like','likes.id as likeId','publicaciones.users_id as user_id', DB::raw("false as myPublic"),'users.nickname','users.fullname'
             ,'users.image as ImagenUser','publicaciones.image as imagenPublica',
             'publicaciones.created_at','publicaciones.updated_at','publicaciones.description']);
-
 
             $UserSendPublic = DB::table('users')
             ->join('friends','users.id','=','friends.user_friend')
@@ -202,8 +201,6 @@ class PublicacionesController extends Controller
             where likes.publicacion_id = publicaciones.id ) as contadorLikes'),'likes.id as likeId', 'publicaciones.users_id as user_id', DB::raw("true as myPublic"),'users.nickname','users.fullname',
             'users.image as ImagenUser','publicaciones.image as imagenPublica',
             'publicaciones.created_at','publicaciones.updated_at','publicaciones.description']);
-
-
         // if(count($userRecep) > 0 || count($UserSend) > 0  || count($myPublic) > 0 ){
             $arrPublications = array();
                 if(count($userRecep) > 0){
