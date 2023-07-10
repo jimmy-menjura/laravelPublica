@@ -10,8 +10,9 @@ use JWTAuth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\File;
+use Illuminate\Support\Facades\File;
 use Image;
+use Illuminate\Support\Str;
 
 class Controlador extends Controller
 {
@@ -45,16 +46,18 @@ class Controlador extends Controller
                 'watchpublications' => 1
                 ]);
             if($request->hasFile('image')){
-                $nombre = $request->file('image')->getClientOriginalName();
-                $ruta = storage_path() . 'public/archivo_imagenes/' . $user->id . $nombre;
+                $nombre = Str::random(10) . $request->file('image')->getClientOriginalName();
+                $rutaId = storage_path() . '\app\public\archivo_imagenes/' . $user->id;
+                File::makeDirectory($rutaId,0777,true,true);
+                $rutaCompleta = $rutaId . '/' . $nombre;
                 // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/".  $user->id , $nombre);
                 Image::make($request->file('image'))
                     ->resize(1200,null,function($constraint){
                         $constraint->aspectRatio();
                     })
-                    ->save($ruta);
+                    ->save($rutaCompleta);
                 // $image = Storage::url($ruta);
-                $user->update(['image'=> $ruta]);
+                $user->update(['image'=> '/storage/archivo_imagenes/'. $user->id . '/' . $nombre]);
             }
             // $user = registro::create($request->all());
 
@@ -135,17 +138,29 @@ class Controlador extends Controller
         public function guardarImagenPerfil(Request $request,User $id){
             
                     if($request->hasFile('image')){
-                        $probar = $request->file('image')->getClientOriginalName();
-                        $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/". $id->id,$probar);
+
+                        $nombre = Str::random(10) . $request->file('image')->getClientOriginalName();
+                        $rutaId = storage_path() . '\app\public\archivo_imagenes/' . $id->id;
+                        File::makeDirectory($rutaId,0777,true,true);
+                        $rutaCompleta = $rutaId . '/' . $nombre;
+                        // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/".  $user->id , $nombre);
+                        Image::make($request->file('image'))
+                        ->resize(1200,null,function($constraint){
+                        $constraint->aspectRatio();
+                        })
+                        ->save($rutaCompleta);
+
+                        // $probar = $request->file('image')->getClientOriginalName();
+                        // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/". $id->id,$probar);
                         if($id->image != null && $id->image != ''){
                             unlink(public_path($id->image));
                         }
-                        $image = Storage::url($imagenes);
-                        $actualizado = $id->update(['image'=> $image]);
+                        // $image = Storage::url($rutaId);
+                        $actualizado = $id->update(['image'=> '/storage/archivo_imagenes/'. $id->id . '/' . $nombre]);
                         return response()->json([
                         "resp" => true,
                         "idActualizado" => $id->id,
-                        "imagenActualizado" => $image,
+                        "imagenActualizado" => '/storage/archivo_imagenes/'. $id->id . '/' . $nombre,
                         "Mensaje" => 'Actualizado exitosamente'
                     ],200);
                     }

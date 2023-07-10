@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Image;
 use \stdClass;
 
 class PublicacionesController extends Controller
@@ -24,11 +26,24 @@ class PublicacionesController extends Controller
         $file_name = "";
         $this->publicaciones->description= $request->description;
         $this->publicaciones->image = $file_name;
-       $imagenes = $request->file("image")->store("public/imagenes");
-       $image = Storage::url($imagenes);
+    //    $imagenes = $request->file("image")->store("public/imagenes");
+    //    $image = Storage::url($imagenes);
+
+       $nombre = Str::random(10) . $request->file('image')->getClientOriginalName();
+    //    $rutaId = storage_path() . '\app\public\imagenes/' . $id->id;
+    //    File::makeDirectory($rutaId,0777,true,true);
+       $rutaCompleta = storage_path() . '\app\public\imagenes/' . $nombre;
+       // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/".  $user->id , $nombre);
+       Image::make($request->file('image'))
+       ->resize(1200,null,function($constraint){
+       $constraint->aspectRatio();
+       })
+       ->save($rutaCompleta);
+
+       
        $publicacion = publicaciones::Create([
         'description'=>$this->publicaciones->description,
-        'image' => $image,
+        'image' => '/storage/imagenes/'. $nombre,
         'users_id'=>$this->publicaciones->user_id
          ]);
         // $user->publicaciones()->create([
