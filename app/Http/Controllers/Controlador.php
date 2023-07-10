@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\File;
+use Image;
 
 class Controlador extends Controller
 {
@@ -44,10 +45,16 @@ class Controlador extends Controller
                 'watchpublications' => 1
                 ]);
             if($request->hasFile('image')){
-                $probar = $request->file('image')->getClientOriginalName();
-                $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/".  $user->id , $probar);
-                $image = Storage::url($imagenes);
-                $user->update(['image'=> $image]);
+                $nombre = $request->file('image')->getClientOriginalName();
+                $ruta = storage_path() . 'public/archivo_imagenes/' . $user->id . $nombre;
+                // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/".  $user->id , $nombre);
+                Image::make($request->file('image'))
+                    ->resize(1200,null,function($constraint){
+                        $constraint->aspectRatio();
+                    })
+                    ->save($ruta);
+                // $image = Storage::url($ruta);
+                $user->update(['image'=> $ruta]);
             }
             // $user = registro::create($request->all());
 
