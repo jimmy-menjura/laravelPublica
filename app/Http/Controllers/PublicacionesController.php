@@ -40,7 +40,7 @@ class PublicacionesController extends Controller
        
        $publicacion = publicaciones::Create([
         'description'=>$this->publicaciones->description,
-        'image' => $nombre,
+        'image' => $url,
         'users_id'=>$this->publicaciones->user_id
          ]);
         // $user->publicaciones()->create([
