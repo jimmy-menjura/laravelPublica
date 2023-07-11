@@ -30,20 +30,17 @@ class PublicacionesController extends Controller
     //    $image = Storage::url($imagenes);
 
        $nombre = Str::random(10) . $request->file('image')->getClientOriginalName();
-    //    $rutaId = storage_path() . '\app\public\imagenes/' . $id->id;
-    //    File::makeDirectory($rutaId,0777,true,true);
-       $rutaCompleta = storage_path() . '\app\public\imagenes/' . $nombre;
-       // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/".  $user->id , $nombre);
-       Image::make($request->file('image'))
+       $extension = $request->file('image')->getClientOriginalExtension();
+       $image = Image::make($request->file('image'))
        ->resize(1200,null,function($constraint){
        $constraint->aspectRatio();
-       })
-       ->save($rutaCompleta);
-
+       })->encode($extension,30);
+       $imagenes = Storage::put('public/imagenes/' . $nombre,$image);
+       $url = '/storage/imagenes/'. $nombre;
        
        $publicacion = publicaciones::Create([
         'description'=>$this->publicaciones->description,
-        'image' => '/storage/imagenes/'. $nombre,
+        'image' => $nombre,
         'users_id'=>$this->publicaciones->user_id
          ]);
         // $user->publicaciones()->create([
@@ -53,7 +50,7 @@ class PublicacionesController extends Controller
             return response()->json([
                 "success"=>true,
                 "message"=>"Registro con éxito",
-                "user"=>$user
+                "user"=>$url
             ],200);
     }
     public function getAll()

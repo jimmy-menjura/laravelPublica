@@ -47,17 +47,25 @@ class Controlador extends Controller
                 ]);
             if($request->hasFile('image')){
                 $nombre = Str::random(10) . $request->file('image')->getClientOriginalName();
-                $rutaId = storage_path() . '\app\public\archivo_imagenes/' . $user->id;
-                File::makeDirectory($rutaId,0777,true,true);
-                $rutaCompleta = $rutaId . '/' . $nombre;
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $image = Image::make($request->file('image'))
+                ->resize(1200,null,function($constraint){
+                $constraint->aspectRatio();
+                })->encode($extension,30);
+                $imagenes = Storage::put('public/archivo_imagenes/' . $id->id . '/' . $nombre,$image);
+                $url = '/storage/archivo_imagenes/'. $id->id . '/' . $nombre;
+                // $nombre = Str::random(10) . $request->file('image')->getClientOriginalName();
+                // $rutaId = storage_path() . '\app\public\archivo_imagenes/' . $user->id;
+                // File::makeDirectory($rutaId,0777,true,true);
+                // $rutaCompleta = $rutaId . '/' . $nombre;
                 // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/".  $user->id , $nombre);
-                Image::make($request->file('image'))
-                    ->resize(1200,null,function($constraint){
-                        $constraint->aspectRatio();
-                    })
-                    ->save($rutaCompleta);
+                // Image::make($request->file('image'))
+                //     ->resize(1200,null,function($constraint){
+                //         $constraint->aspectRatio();
+                //     })
+                //     ->save($rutaCompleta);
                 // $image = Storage::url($ruta);
-                $user->update(['image'=> '/storage/archivo_imagenes/'. $user->id . '/' . $nombre]);
+                $user->update(['image'=> $url]);
             }
             // $user = registro::create($request->all());
 
@@ -140,15 +148,23 @@ class Controlador extends Controller
                     if($request->hasFile('image')){
 
                         $nombre = Str::random(10) . $request->file('image')->getClientOriginalName();
-                        $rutaId = storage_path() . '\app\public\archivo_imagenes/' . $id->id;
-                        File::makeDirectory($rutaId,0777,true,true);
-                        $rutaCompleta = $rutaId . '/' . $nombre;
-                        // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/".  $user->id , $nombre);
-                        Image::make($request->file('image'))
+                        $extension = $request->file('image')->getClientOriginalExtension();
+                        $image = Image::make($request->file('image'))
                         ->resize(1200,null,function($constraint){
                         $constraint->aspectRatio();
-                        })
-                        ->save($rutaCompleta);
+                        })->encode($extension,30);
+                        $imagenes = Storage::put('public/archivo_imagenes/' . $id->id . '/' . $nombre,$image);
+                        $url = '/storage/archivo_imagenes/'. $id->id . '/' . $nombre;
+                        // $nombre = Str::random(10) . $request->file('image')->getClientOriginalName();
+                        // $rutaId = storage_path() . '\app\public\archivo_imagenes/' . $id->id;
+                        // File::makeDirectory($rutaId,0777,true,true);
+                        // $rutaCompleta = $rutaId . '/' . $nombre;
+                        // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/".  $user->id , $nombre);
+                        // Image::make($request->file('image'))
+                        // ->resize(1200,null,function($constraint){
+                        // $constraint->aspectRatio();
+                        // })
+                        // ->save($rutaCompleta);
 
                         // $probar = $request->file('image')->getClientOriginalName();
                         // $imagenes = $request->file('image')->storeAs("public/archivo_imagenes/". $id->id,$probar);
@@ -156,11 +172,11 @@ class Controlador extends Controller
                             unlink(public_path($id->image));
                         }
                         // $image = Storage::url($rutaId);
-                        $actualizado = $id->update(['image'=> '/storage/archivo_imagenes/'. $id->id . '/' . $nombre]);
+                        $actualizado = $id->update(['image'=> $url]);
                         return response()->json([
                         "resp" => true,
                         "idActualizado" => $id->id,
-                        "imagenActualizado" => '/storage/archivo_imagenes/'. $id->id . '/' . $nombre,
+                        "imagenActualizado" => $url,
                         "Mensaje" => 'Actualizado exitosamente'
                     ],200);
                     }
