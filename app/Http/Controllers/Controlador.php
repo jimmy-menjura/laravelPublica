@@ -52,8 +52,8 @@ class Controlador extends Controller
                 ->resize(1200,null,function($constraint){
                 $constraint->aspectRatio();
                 })->encode($extension,30);
-                $imagenes = Storage::put('public/archivo_imagenes/' . $id->id . '/' . $nombre,$image);
-                $url = '/storage/archivo_imagenes/'. $id->id . '/' . $nombre;
+                $imagenes = Storage::put('public/archivo_imagenes/' . $user->id . '/' . $nombre,$image);
+                $url = '/storage/archivo_imagenes/'. $user->id . '/' . $nombre;
                 // $nombre = Str::random(10) . $request->file('image')->getClientOriginalName();
                 // $rutaId = storage_path() . '\app\public\archivo_imagenes/' . $user->id;
                 // File::makeDirectory($rutaId,0777,true,true);
