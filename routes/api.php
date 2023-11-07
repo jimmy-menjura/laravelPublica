@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Amigos;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\NotificationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::delete('eliminar/{id}',[PublicacionesController::class,'eliminar']);
 Route::get('obtenerPerfil/{id}',[Controlador::class,'get']);
 Route::post('mensaje', [ChatController::class,'message'])->name('api.mensaje.message')->middleware('auth:api');
 Route::post('mensajePrivado', [ChatController::class,'messagePriv'])->name('api.mensaje.messagePriv')->middleware('auth:api');
+// Route::post('notiSolicitud', [NotificationsController::class,'notificationbyUserFriend'])->name('api.mensaje.notification')->middleware('auth:api');
 Route::post('login', [AuthController::class,'login']);
 Route::post('registro', [Controlador::class,'register']);
 // Route::post('editarEstadoAmigo/{id}', [Controlador::class,'editFriend']);
@@ -71,7 +73,7 @@ Route::group([
     Route::post('agregarAmigo', [Amigos::class,'createFriend']);
     Route::put('editarEstadoAmigo/{id}', [Amigos::class,'editFriend']);
     Route::get('obtenerStatusFriend',[Amigos::class,'getAllFriends']);
-    Route::delete('eliminarAmigo/{id}',[Amigos::class,'eliminarFriend']);
+    Route::delete('eliminarAmigo/{id}/{idnotify}',[Amigos::class,'eliminarFriend']);
     Route::get('amigoAgregado', [Amigos::class,'obtenerAmigosAgregados']);
     // Route::put('actualizaPerfil/{id}', [Controlador::class,'editarPerfil']);
     Route::put('actualizaPerfil/{id}',[Controlador::class,'editarPerfil']);
@@ -91,6 +93,8 @@ Route::group([
     Route::put('actualizarPrivacidadPublicaciones/{id}', [Controlador::class,'updatePrivacityPublications']);
     Route::get('obtenerPrivacidadPublicación',[Controlador::class,'getPrivacityPublication']);
     Route::get('contadorMisPublicaciones',[PublicacionesController::class,'getCountMyPublications']);
-    
-    
+    Route::get('getNotify', [NotificationsController::class,'getNotificationByUserAuth']); 
+    Route::post('notiSolicitud', [NotificationsController::class,'notificationbyUserFriend']); 
+    // Route::delete('deleteNotify/{id}', [NotificationsController::class,'deleteNotification']); 
+    Route::put('updateStatusNotify', [NotificationsController::class,'updateNotificationStatus']); 
 });

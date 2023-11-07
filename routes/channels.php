@@ -22,3 +22,6 @@ Broadcast::channel('private', function ($user) {
 Broadcast::channel('channel-direct.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+Broadcast::channel('NotificaEvent.{id}', function ($user,$id){
+    return (int) $user->id === (int) $id;
+});

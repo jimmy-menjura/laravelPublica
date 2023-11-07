@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\friends;
+use App\Models\Notificaciones;
+use App\Notifications\notifications;
+use App\Http\Controllers\NotificationsController;
 use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\File;
+use Carbon\Carbon;
 
 class Amigos extends Controller
 {
@@ -56,8 +60,10 @@ class Amigos extends Controller
         }
 
     }
-    public function eliminarFriend($id){
+    public function eliminarFriend($id,$idnotify){
+        $notification = new NotificationsController();
         $friend = friends::find($id);
+        $notification->deleteNotification($idnotify);
         $friend->delete();
         return $friend;
     }
@@ -66,6 +72,45 @@ class Amigos extends Controller
             */
             public function createFriend(Request $request)
             {
+                $notification = new NotificationsController();
+                $message = 'Te envió la solicitud';
+                $user = User::find($request->user_friend);
+                $userSend = User::find($request->user_id);
+                $notification::$userId = $user->id;
+                $getNotificationBD = $notification->getNotificationByUserAuth();
+        if(count($getNotificationBD) > 0){
+            foreach ($getNotificationBD as $valor) {
+                if($valor->fullname != $user->fullname && $valor->message != $message){
+                $currentTime = Carbon::now();
+                $created_at = $currentTime->toDateTimeString();
+                $user->notify(new notifications($message,$userSend->nickname,$userSend->fullname,$userSend->image,$created_at));
+                Notificaciones::create([
+                    'message' => $message,
+                    'nickname' => $userSend->nickname,
+                    'fullname' => $userSend->fullname,
+                    'image' => $userSend->image,
+                    'status' => 1,
+                    'user_id' => $userSend->id,
+                    'to' => $user->id
+                ]);
+                }
+            }
+        }
+        else{
+                $currentTime = Carbon::now();
+                $created_at = $currentTime->toDateTimeString();
+                $user->notify(new notifications($message,$userSend->nickname,$userSend->fullname,$userSend->image,$created_at));
+                Notificaciones::create([
+                    'message' => $message,
+                    'nickname' => $userSend->nickname,
+                    'fullname' => $userSend->fullname,
+                    'image' => $userSend->image,
+                    'status' => 1,
+                    'user_id' => $userSend->id,
+                    'to' => $user->id
+                ]);
+        }
+         
             	$registro = friends::create($request->all());
             	return $registro;
             }
@@ -83,11 +128,15 @@ class Amigos extends Controller
             public function getAllFriends()
             {
                 $allusersAndbyUser = null;
+                $message = "Te envió la solicitud";
                 try{
                 $UserRecep = DB::select(DB::raw("
-                SELECT * FROM `users` u 
+                SELECT u.email, u.nickname, u.fullname,u.image, u.watchpublications,f.id,f.status,f.user_id,f.user_friend,n.id as idNotify FROM `users` u 
                 INNER JOIN friends f on u.id = f.user_id
-                where f.user_friend = " . auth()->user()->id . " and f.status <> 2"
+                INNER JOIN notificaciones n on f.user_friend = n.to
+                where n.message = 'Te envió la solicitud'
+                and n.user_id = u.id
+                and f.user_friend = " . auth()->user()->id . " and f.status <> 2"
                 ));
 
                 // ->join('friends','users.id','=','friends.user_friend')
@@ -96,9 +145,13 @@ class Amigos extends Controller
 
                 $UserSend = DB::table('users')
                 ->join('friends','users.id','=','friends.user_friend')
+                ->join('notificaciones', 'notificaciones.to' ,'=', 'friends.user_friend')
+                // ->where('notificaciones.message','=',"'".$message."'")
+                // ->where('notificaciones.user_id','=','friends.user_id')
                 ->where('friends.user_id','=', auth()->user()->id)
                 ->where('friends.status','<>',2)
-                ->get();
+                ->get(['users.email','users.nickname', 'users.fullname','users.image', 'users.watchpublications',
+                'friends.id','friends.status','friends.user_id','friends.user_friend','notificaciones.id as idNotify']);
 
                 // if(empty($UserRecep) || $UserSend ->isEmpty()){
                     $allusersAndbyUser = DB::select(DB::raw("

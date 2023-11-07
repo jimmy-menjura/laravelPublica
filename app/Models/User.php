@@ -11,6 +11,8 @@ use App\Models\publicaciones;
 use App\Models\friends;
 use App\Models\Likes;
 use App\Models\comments;
+use App\Models\Notificaciones;
+
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
@@ -36,6 +38,9 @@ class User extends Authenticatable implements JWTSubject
     public function mensajes()
     {
         return $this->hasMany('App\Models\Mensaje');
+    }
+    public function Notificaciones(){
+        return $this->hasMany(Notificacion::class);
     }
     /**
      * The attributes that should be hidden for arrays.
