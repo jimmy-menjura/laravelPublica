@@ -18,17 +18,26 @@ class notifications extends Notification implements ShouldBroadcast
     public string $fullname;
     public string $image;
     public string $created_at;
+    public string $user_id;
+    public string $status;
+    public string $typeNotify;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(string $message, string $nickname,string $fullname,string $image,string $created_at)
+    public function __construct(string $message, 
+    string $nickname,string $fullname,string $image,
+    string $status,string $typeNotify,string $user_id,
+    string $created_at)
     {
         $this->message = $message;
         $this->nickname = $nickname;
         $this->fullname = $fullname;
         $this->image = $image;
+        $this->user_id = $user_id;
+        $this->status = $status;
+        $this->typeNotify = $typeNotify;
         $this->created_at = $created_at;
     }
 
@@ -50,6 +59,9 @@ class notifications extends Notification implements ShouldBroadcast
             // 'user' => $notifiable->id,
             'nickname' => $this->nickname,
             'image' => $this->image,
+            'user_id'=>$this->user_id ,
+            'status'=>$this->status,
+            'typeNotify'=>$this->typeNotify,
             'fullname' => $this->fullname,
             'created_at' => $this->created_at
         ]);

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,16 +12,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('notificaciones', function (Blueprint $table) {
+        Schema::create('nosendnotifies', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('message');
-            $table->string('nickname');
-            $table->string('fullname');
-            $table->string('image');
-            $table->integer('status');
-            $table->integer('typeNotify');
-            $table->integer('user_id');
-            $table->foreignId('to');
+            $table->integer('user_send');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }
@@ -34,6 +27,5 @@ return new class extends Migration
      */
     public function down()
     {
-        //
     }
 };
