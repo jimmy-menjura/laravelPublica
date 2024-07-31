@@ -2,25 +2,23 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class ChatEvent implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     /**
      * @var array
      */
     public $response;
-    
+
     /**
      * Create a new event instance.
      *
@@ -29,10 +27,9 @@ class ChatEvent implements ShouldBroadcastNow
     public function __construct($data)
     {
         $this->response = [
-            'image'   => $data['image'],
-            'message'   => $data['message'],
-            'to'        => $data['to'],
-            'idOriginador' =>  auth()->user()->id      
+            'message' => $data['message'],
+            'to' => $data['to'],
+            'idOriginador' => auth()->user()->id,
         ];
     }
 
@@ -43,6 +40,6 @@ class ChatEvent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new PrivateChannel("channel-direct." . $this->response['to']);
+        return new PrivateChannel('channel-direct.'.$this->response['to']);
     }
 }

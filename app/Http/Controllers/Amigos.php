@@ -24,11 +24,17 @@ class Amigos extends Controller
     public function obtenerAmigosAgregados()
     {
         try {
-            $UserRecep = DB::select(DB::raw('
-        SELECT * FROM `users` u 
-        INNER JOIN friends f on u.id = f.user_id
-        where f.user_friend = '.auth()->user()->id.' and f.status = 2'
-            ));
+            $UserRecep = DB::table('users')
+            ->join('friends', 'users.id', '=', 'friends.user_id')
+            ->where('friends.user_friend', '=', auth()->user()->id)
+            ->where('friends.status', '=', 2)
+            ->get();
+
+            //     $UserRecep = DB::select(DB::raw('
+            // SELECT * FROM `users` u
+            // INNER JOIN friends f on u.id = f.user_id
+            // where f.user_friend = '.auth()->user()->id.' and f.status = 2'
+            //     ));
 
             // ->join('friends','users.id','=','friends.user_friend')
             // ->where('friends.user_id','=', auth()->user()->id)

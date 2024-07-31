@@ -157,21 +157,25 @@ class PublicacionesController extends Controller
             where likes.publicacion_id = publicaciones.id ) as contadorLikes'), 'likes.like', 'likes.id as likeId', 'publicaciones.users_id as user_id', DB::raw('false as myPublic'), 'users.nickname', 'users.fullname', 'users.image as ImagenUser', 'publicaciones.image as imagenPublica',
             'publicaciones.created_at', 'publicaciones.updated_at', 'publicaciones.description']);
 
-            $UserSendPublic = DB::table('users')
-            ->join('friends', 'users.id', '=', 'friends.user_friend')
-            ->join('publicaciones', 'users.id', '=', 'publicaciones.users_id')
-            ->leftJoin('likes', function ($query) {
-                $query->on('likes.publicacion_id', '=', 'publicaciones.id');
-                $query->on('likes.user_id', '=', DB::raw(auth()->user()->id));
-            })
-            ->where('users.watchpublications', '=', 1)
-            ->where('friends.user_id', '<>', auth()->user()->id)
-            ->where('status', '<>', 2)
-            ->orderBy('publicaciones.created_at', 'desc')
-            // ->get();
-            ->get(['publicaciones.id', DB::raw('(select count(likes.like) from likes 
-            where likes.publicacion_id = publicaciones.id ) as contadorLikes'), 'likes.like', 'likes.id as likeId', 'publicaciones.users_id as user_id', DB::raw('false as myPublic'), 'users.nickname', 'users.fullname', 'users.image as ImagenUser', 'publicaciones.image as imagenPublica',
-            'publicaciones.created_at', 'publicaciones.updated_at', 'publicaciones.description']);
+            /**
+             * FALLA QUERY.
+             */
+            // $UserSendPublic = DB::table('users')
+            // ->join('friends', 'users.id', '=', 'friends.user_friend')
+            // ->join('publicaciones', 'users.id', '=', 'publicaciones.users_id')
+            // ->leftJoin('likes', function ($query) {
+            //     $query->on('likes.publicacion_id', '=', 'publicaciones.id');
+            //     $query->on('likes.user_id', '=', DB::raw(auth()->user()->id));
+            // })
+            // ->orWhere('users.watchpublications', '=', 1)
+            // ->where('friends.user_id', '<>', auth()->user()->id)
+            // ->where('status', '<>', 2)
+            // ->orderBy('publicaciones.created_at', 'desc')
+            // // ->get();
+            // ->get(['publicaciones.id', DB::raw('(select count(likes.like) from likes
+            // where likes.publicacion_id = publicaciones.id ) as contadorLikes'), 'likes.like', 'likes.id as likeId', 'publicaciones.users_id as user_id', DB::raw('false as myPublic'), 'users.nickname', 'users.fullname', 'users.image as ImagenUser', 'publicaciones.image as imagenPublica',
+            // 'publicaciones.created_at', 'publicaciones.updated_at', 'publicaciones.description']);
+
             // $UserSend = User::withWhereHas('publicaciones', function(Builder $q) {
             //     $q->orderBy('publicaciones.created_at', 'desc')
             //     ->join('friends','friend.user_friend','=','publicaciones.users_id')
@@ -250,12 +254,12 @@ class PublicacionesController extends Controller
                     array_push($arrPublications, $userRecepPublic[$i]);
                 }
             }
-            if (count($UserSendPublic) > 0) {
-                for ($i = 0; $i < count($UserSendPublic); ++$i) {
-                    // $object2 = $UserSend[$i];
-                    array_push($arrPublications, $UserSendPublic[$i]);
-                }
-            }
+            // if (count($UserSendPublic) > 0) {
+            //     for ($i = 0; $i < count($UserSendPublic); ++$i) {
+            //         // $object2 = $UserSend[$i];
+            //         array_push($arrPublications, $UserSendPublic[$i]);
+            //     }
+            // }
             // }
             //  print_r($stack);
 

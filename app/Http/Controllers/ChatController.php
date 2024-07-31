@@ -71,7 +71,7 @@ class ChatController extends Controller
                 ]);
                 event(new ChatEvent($data));
                 if ($noti) {
-                    $userSend->notify(new notifications($mensaje.$finishMessage, $user->nickname, $user->fullname, $user->image, $status, $typeNotify, $user->id, $created_at));
+                    $userSend->notify(new notifications($mensaje.$finishMessage, $user->nickname, $user->fullname, $user->image != null && $user->image != '' ? $user->image : '', $status, $typeNotify, $user->id, $created_at));
                 }
             } else {
                 mensajes::create([
@@ -81,12 +81,12 @@ class ChatController extends Controller
                 ]);
                 event(new ChatEvent($data));
                 if ($noti) {
-                    $userSend->notify(new notifications($mensaje.$finishMessage, $user->nickname, $user->fullname, $user->image, $status, $typeNotify, $user->id, $created_at));
+                    $userSend->notify(new notifications($mensaje.$finishMessage, $user->nickname, $user->fullname, $user->image != null && $user->image != '' ? $user->image : '', $status, $typeNotify, $user->id, $created_at));
                     Notificaciones::create([
                         'message' => $mensaje.$finishMessage,
                         'nickname' => $user->nickname,
                         'fullname' => $user->fullname,
-                        'image' => $user->image,
+                        'image' => $user->image != null && $user->image != '' ? $user->image : '',
                         'status' => $status,
                         'typeNotify' => $typeNotify,
                         'user_id' => $user->id,
@@ -138,12 +138,12 @@ class ChatController extends Controller
             ]);
             event(new ChatEvent($data));
             if ($noti) {
-                $userSend->notify(new notifications($mensaje.$finishMessage, $user->nickname, $user->fullname, $user->image, $status, $typeNotify, $user->id, $created_at));
+                $userSend->notify(new notifications($mensaje.$finishMessage, $user->nickname, $user->fullname, $user->image != null && $user->image != '' ? $user->image : '', $status, $typeNotify, $user->id, $created_at));
                 Notificaciones::create([
                     'message' => $mensaje.$finishMessage,
                     'nickname' => $user->nickname,
                     'fullname' => $user->fullname,
-                    'image' => $user->image,
+                    'image' => $user->image != null && $user->image != '' ? $user->image : '',
                     'status' => $status,
                     'typeNotify' => $typeNotify,
                     'user_id' => $user->id,
